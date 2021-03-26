@@ -20,7 +20,8 @@
     "sinon": "^10.0.0"
   },
   "dependencies": {
-    "bcrypt": "^5.0.1",
+    "crypto-js": "^4.0.0",
+    "dotenv": "^8.2.0",
     "mysql2": "^2.2.5",
     "sequelize": "^6.6.2"
   },

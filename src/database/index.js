@@ -1,13 +1,13 @@
 const { Sequelize, Op } = require('sequelize')
 
-const dbConfig = require('./config/database.json')
+const dbConfig = require('./config/database.js')
 
 const UserDB = require('#database/model/user')
 const AccountDB = require('#database/model/account')
 const AccountPlanDB = require('#database/model/account-plan')
 const TransactionDB = require('#database/model/transaction')
 
-const conn = new Sequelize(dbConfig.development)
+const conn = new Sequelize(dbConfig)
 
 const modelsDB = [UserDB, AccountDB, AccountPlanDB, TransactionDB]
 
