@@ -11,13 +11,13 @@ class UserRepository extends BaseRepository {
         const createUserAndAccount = await conn.transaction()
 
         try {
-            const user = await super.store(model, { transaction: createUserAndAccount })
+            const user = await super.create(model, { transaction: createUserAndAccount })
 
-            await AccountDB.create(new Account(user.id), { transaction: createUserAndAccount })
+            await AccountDB.create(new Account({ user_id: user.id }), { transaction: createUserAndAccount })
 
             await createUserAndAccount.commit()
 
-            return user
+            return user.get()
         }
         catch(error) {
             await createUserAndAccount.rollback()

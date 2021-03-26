@@ -10,7 +10,7 @@ class BaseRepository {
     async find(id, options) {
         const modelDb = await this._dbModel.findByPk(id, options)
 
-        return modelDb?.dataValues
+        return modelDb?.get()
     }
 
     async update(modelDb, payload) {
@@ -32,7 +32,7 @@ class BaseRepository {
     async list(options) {
         const modelsDb = await this._dbModel.findAll(Object.assign({ where: { active: true } }, options))
 
-        return modelsDb.map(modelDb => modelDb.dataValues)
+        return modelsDb.map(modelDb => modelDb.get())
     }
 
     async getToUpdate(id) {
