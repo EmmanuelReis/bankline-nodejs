@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npx mocha --exit ./test/**/*.test.js",
     "test:dev": "npx mocha ./test/**/*.test.js -w",
+    "start:dev": "nodemon ./src/index.js",
     "start": "node ./src/index.js"
   },
   "keywords": [],
@@ -16,12 +17,15 @@
     "chai-as-promised": "^7.1.1",
     "faker": "^5.5.0",
     "mocha": "^8.3.2",
+    "nodemon": "^2.0.7",
     "sequelize-cli": "^6.2.0",
     "sinon": "^10.0.0"
   },
   "dependencies": {
+    "@hapi/hapi": "^20.1.2",
     "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
+    "mongoose": "^5.12.2",
     "mysql2": "^2.2.5",
     "sequelize": "^6.6.2"
   },
@@ -30,9 +34,12 @@
     "#utils/*": "./src/util/*.js",
     "#model/*": "./src/models/*.js",
     "#route/*": "./src/routes/*.js",
+    "#routes": "./src/routes/index.js",
+    "#handler/*": "./src/handlers/*.js",
     "#service/*": "./src/services/*.js",
     "#repository/*": "./src/repositories/*.js",
-    "#database": "./src/database/index.js",
+    "#database/*": "./src/database/*.js",
+    "#database/config": "./src/database/config/database.js",
     "#database/schema/*": "./src/database/schemas/*.js",
     "#database/model/*": "./src/database/models/*.js",
     "#test/builder/*": "./test/builders/*.js"

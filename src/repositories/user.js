@@ -1,6 +1,6 @@
 const Account = require('#model/account')
 const BaseRepository = require('#repository/_base-repository')
-const { UserDB, AccountDB, conn, Op } = require('#database')
+const { UserDB, AccountDB, conn, Op } = require('#database/postgres')
 
 class UserRepository extends BaseRepository {
     constructor() {
