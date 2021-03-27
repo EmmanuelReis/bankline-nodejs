@@ -7,17 +7,17 @@ class BaseHandler {
     }
 
     async create(req, h) {
-        const user = await this._service.create(req.payload)
+        const model = await this._service.create(req.payload)
 
         return h
             .response()
-            .location(`http://${process.env.APPLICATION_HOST}:${process.env.APPLICATION_PORT}/${this._name}/${user.id}`)
+            .location(`http://${process.env.APPLICATION_HOST}:${process.env.APPLICATION_PORT}/${this._name}/${model.id}`)
             .code(201)
     }
 
     async find(req, h) {
         return h
-            .response(await this._service.find(req.params.id))
+            .response(await this._service.find(req.params.id, req.payload))
             .code(200)
     }
 

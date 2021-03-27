@@ -6,6 +6,12 @@ class UserHandler extends BaseHandler {
     constructor() {
         super(UserSchema.table_name, UserService)
     }
+
+    async login(req, h) {
+        return h
+            .response(await this._service.login(req.payload))
+            .code(200)
+    }
 }
 
 module.exports = UserHandler

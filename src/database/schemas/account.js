@@ -7,8 +7,8 @@ module.exports = {
     table_name: 'accounts',
     columns: {
         ...BaseColumns,
-        saldo: {
-            type: DataTypes.DECIMAL,
+        balance: {
+            type: DataTypes.FLOAT,
             allowNull: false,
             defaultValue: 0
         },

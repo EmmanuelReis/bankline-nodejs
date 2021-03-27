@@ -1,17 +1,14 @@
-const { Model } = require('sequelize');
+const Mongoose = require('mongoose')
 
-const TransactionSchema = require('#database/schema/transaction')
-const AccountSchema = require('#database/schema/account')
+const TransactionSchema = new Mongoose.Schema({
+    created_at: { 
+        type: Date, 
+        default: Date.now() 
+    },
+    value: Number,
+    type_id: String,
+    source_account_id: String,
+    target_account_id: String
+}, { collection: 'transactions' })
 
-class TransactionDbModel extends Model {
-    static init(sequelize) {
-        super.init(TransactionSchema.columns, { sequelize, modelName: TransactionSchema.table_name })
-    }
-
-    static associate(models) {
-        this.belongsTo(models[AccountSchema.table_name], { foreignKey: 'source_account_id', as:'source_account' })
-        this.belongsTo(models[AccountSchema.table_name], { foreignKey: 'target_account_id', as:'target_account' })
-    }
-}
-
-module.exports = TransactionDbModel
+module.exports = Mongoose.model('Transaction', TransactionSchema)

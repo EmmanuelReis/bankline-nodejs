@@ -12,9 +12,23 @@ class UserService extends BaseService {
         const exist = await this._repository.findByCpfOrLogin(payload.cpf, payload.login)
 
         if(exist)
-            throw Error("Ops!")
+            throw Error('Ops!')
 
         return await super.create(payload)
+    }
+
+    async login(payload) {
+        const { login, password } = payload
+
+        if(!login || !password)
+            throw Error('Ops!')
+
+        const exist = await this._repository.findUser(login, password)
+
+        if(!exist)
+            throw Error('Ops!')
+
+        return { ok: 'ok' } 
     }
 }
 

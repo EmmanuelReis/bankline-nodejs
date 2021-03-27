@@ -1,42 +1,44 @@
 class BaseRepository {
-    constructor(dbModel) {
-        this._dbModel = dbModel
+    constructor(db_model) {
+        this._db_model = db_model
     }
 
-    async create(model, options = {}) {
-        return await this._dbModel.create(model, options)
+    async create(model) {
+        return await this._db_model.create(model)
     }
 
     async find(id, options) {
-        const modelDb = await this._dbModel.findByPk(id, options)
+        const model_db = await this._db_model.findByPk(id, options)
 
-        return modelDb?.get()
+        return model_db?.get()
     }
 
-    async update(modelDb, payload) {
-        const attributes = Reflect.ownKeys(payload).filter(attribute => Reflect.has(modelDb, attribute))
-        
-        attributes.forEach(key => modelDb[key] = payload[key])
-        
-        modelDb.updated_at = Date.now()
+    async update(model_db, payload) {
+        const { id, cpf, type_code, active, update_at, balance, ...keys } = payload
 
-        await modelDb.save()
+        const attributes = Reflect.ownKeys(keys).filter(attribute => Reflect.has(model_db, attribute))
+        
+        attributes.forEach(key => model_db[key] = keys[key])
+        
+        model_db.updated_at = Date.now()
 
-        return payload
+        await model_db.save()
+
+        return keys
     }
 
-    async delete(modelDb) {
-        return await this.update(modelDb, { active: false })
+    async delete(model_db) {
+        return await this.update(model_db, { active: false })
     }
 
     async list(options) {
-        const modelsDb = await this._dbModel.findAll(Object.assign({ where: { active: true } }, options))
+        const modelsDb = await this._db_model.findAll(Object.assign({ where: { active: true } }, options))
 
-        return modelsDb.map(modelDb => modelDb.get())
+        return modelsDb.map(model_db => model_db.get())
     }
 
     async getToUpdate(id) {
-        return await this._dbModel.findByPk(id)
+        return await this._db_model.findByPk(id)
     }
 }
 

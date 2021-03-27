@@ -1,12 +1,10 @@
 const Sequelize = require('sequelize')
 const Mongoose = require('mongoose')
 
-const db_config = require('#database/config')
-
 const connectPostgres = () => {
     console.log('[DATABASE] Connecting to the Postgres...')
         
-    const conn = new Sequelize(db_config.postgres)
+    const conn = new Sequelize(require('#database/config/postgres'))
 
     console.log('[DATABASE] Connected to the Postgres!')
 
@@ -14,7 +12,7 @@ const connectPostgres = () => {
 }
 
 const connectMongo = async() => {
-    const { username, password, database, host, port } = db_config.mongo
+    const { username, password, database, host, port } = require('#database/config/mongo')
 
     console.log('[DATABASE] Connecting to the MongoDB...')
 

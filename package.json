@@ -39,7 +39,7 @@
     "#service/*": "./src/services/*.js",
     "#repository/*": "./src/repositories/*.js",
     "#database/*": "./src/database/*.js",
-    "#database/config": "./src/database/config/database.js",
+    "#database/config/*": "./src/database/config/*.js",
     "#database/schema/*": "./src/database/schemas/*.js",
     "#database/model/*": "./src/database/models/*.js",
     "#test/builder/*": "./test/builders/*.js"

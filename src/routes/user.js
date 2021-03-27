@@ -15,6 +15,11 @@ module.exports = [
         handler: handler.create.bind(handler)
     },
     {
+        method: 'POST',
+        path: '/login',
+        handler: handler.login.bind(handler)
+    },
+    {
         method: 'GET',
         path: `${path}/{id}`,
         handler: handler.find.bind(handler)

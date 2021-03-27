@@ -6,8 +6,8 @@ const Account = require('#model/account')
 class TransactionBuilder {
     value = faker.finance.amount()
     type = "RECEITA"
-    source_account = new Account({ user_id: '561512de-c8f7-45f7-ba1b-cf032f53ce79' })
-    target_account = null
+    source_account_id = faker.datatype.uuid()
+    target_account_id = null
 
     static aTransaction = () => new this();
 
@@ -24,14 +24,14 @@ class TransactionBuilder {
     }
 
     withoutSourceAccount() {
-        this.source_account = null
+        this.source_account_id = ""
         
         return this
     }
 
     invalidTransfer() {
         this.type = "TRANSFERENCIA"
-        this.target_account = null
+        this.target_account = ""
 
         return this
     }
@@ -44,7 +44,7 @@ class TransactionBuilder {
 
     validTransfer() {
         this.type = "TRANSFERENCIA"
-        this.target_account = new Account({ user_id: 'f4c0d834-44ad-4b43-ab32-e190205e387d' })
+        this.target_account_id = faker.datatype.uuid()
         
         return this
     }
