@@ -1,3 +1,5 @@
+const Boom = require('@hapi/boom')
+
 const User = require('#model/user')
 const UserRepository = require('#repository/user')
 const BaseService = require('#service/_base-service')
@@ -12,7 +14,7 @@ class UserService extends BaseService {
         const exist = await this._repository.findByCpfOrLogin(payload.cpf, payload.login)
 
         if(exist)
-            throw Error('Ops!')
+            throw Boom.conflict('Login or cpf already exists')
 
         return await super.create(payload)
     }
@@ -20,15 +22,18 @@ class UserService extends BaseService {
     async login(payload) {
         const { login, password } = payload
 
-        if(!login || !password)
-            throw Error('Ops!')
-
         const exist = await this._repository.findUser(login, password)
 
         if(!exist)
-            throw Error('Ops!')
+            throw Boom.notAcceptable('Invalid login or password')
 
-        return { ok: 'ok' } 
+        return exist 
+    }
+
+    async account(id) {
+        const { active, user_id, updated_at, created_at, ...account } = await this._repository.findAccount(id) ?? {}
+        
+        return account 
     }
 }
 

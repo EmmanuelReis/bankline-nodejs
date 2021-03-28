@@ -1,8 +1,12 @@
 require('dotenv').config()
 
 const Hapi = require('@hapi/hapi')
-const routes = require('#routes')
+const AuthLib = require('hapi-auth-jwt2')
+const Inert = require('@hapi/inert');
+const Vision = require('@hapi/vision');
+const HapiSwagger = require('hapi-swagger');
 
+const routes = require('#routes')
 const { connectMongo } = require('#database/conn')
 
 const server = Hapi.server({
@@ -10,14 +14,37 @@ const server = Hapi.server({
     port: process.env.APPLICATION_PORT
 })
 
-server.route(routes)
-
 ;
 (async() => {
     await connectMongo()
     
     console.log('[SERVER] Starting...')
 
+    const swaggerOptions = {
+        info: {
+            title: 'Bankline Cabras do agREST API Documentation',
+            version: 'v1',
+        },
+    };
+
+    await server.register([ Inert, Vision, { plugin: HapiSwagger, options: swaggerOptions }, AuthLib ]);
+
+    server.auth.strategy('jwt', 'jwt', {
+        keys: process.env.SECRET_KEY,
+        validate: async (decode, req, h) => {
+            return {
+                isValid: true
+            }
+        },
+        verifyOptions: { 
+            algorithms: ['HS256']
+        }
+    });
+
+    // server.auth.default('jwt');
+
+    server.route(routes)
+    
     await server.start()
 
     console.log(`[SERVER] Running on ${server.info.uri}`)

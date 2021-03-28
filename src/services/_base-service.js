@@ -1,3 +1,5 @@
+const Boom = require('@hapi/boom')
+
 class BaseService {
     constructor(model, toDTO, repository) {
         this._model = model 
@@ -9,7 +11,7 @@ class BaseService {
         const model = new this._model(payload)
 
         if(!model.isValid())
-            throw new Error('Ops')
+            throw Boom.badRequest()
 
         return this._toDTO(await this._repository.create(payload))
     }
@@ -22,7 +24,7 @@ class BaseService {
         const exist = await this._repository.getToUpdate(id)
 
         if(!exist)
-            throw new Error('Ops!')
+            throw Boom.notFound('Unable to update')
         
         return await this._repository.update(exist, payload)
     }
@@ -31,15 +33,15 @@ class BaseService {
         const exist = await this._repository.getToUpdate(id)
 
         if(!exist)
-            throw new Error('Ops!')
+            throw Boom.notFound('Unable to delete')
         
         return await this._repository.delete(exist)
     }
 
     async list(options = {}) {
-        const modelsDb = await this._repository.list(options)
-        
-        return modelsDb.map(this._toDTO)
+        const models = await this._repository.list(options)
+
+        return models.map(this._toDTO)
     }
 }
 

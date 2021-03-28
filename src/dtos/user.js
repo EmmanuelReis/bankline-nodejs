@@ -1,6 +1,6 @@
 class UserDTO {
     static toDTO(user) {
-        const { created_at, updated_at, active, password, ...dto } = user
+        const { active, password, ...dto } = user
 
         return dto
     }

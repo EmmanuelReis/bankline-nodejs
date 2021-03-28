@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const CryptoJS = require('crypto-js')
+const Boom = require('@hapi/boom')
 
 const Account = require('#model/account')
 const BaseRepository = require('#repository/_base-repository')
@@ -26,7 +26,7 @@ class UserRepository extends BaseRepository {
         catch(error) {
             await transaction.rollback()
             
-            throw new Error("Ops!")
+            throw Boom.internal()
         }
     }
 
@@ -35,9 +35,13 @@ class UserRepository extends BaseRepository {
     }
 
     async findUser(login, password) {
-        const users = await UserDB.findAll({ where: { [Op.or]: { login, cpf: login }, active: true } })
+        const users = await UserDB.findAll({ where: { [Op.or]: { login, cpf: login }, active: true }})
         
-        return users.map(user => user.get()).some(user => user.password == password) 
+        return users.map(user => user.get()).find(user => user.password == password) 
+    }
+
+    async findAccount(user_id) {
+        return (await AccountDB.findOne({ where: { user_id } }))?.get()
     }
 }
 

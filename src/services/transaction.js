@@ -1,3 +1,5 @@
+const Boom = require('@hapi/boom')
+
 const Transaction = require('#model/transaction')
 const TransactionType = require('#model/transaction-type')
 const TransactionRepository = require('#repository/transaction')
@@ -14,7 +16,7 @@ class TransactionService extends BaseService {
         const account_plan = await new AccountPlanRepository().find(payload.type_id, {})
         
         if(!account_plan)
-            throw new Error('Ops!')
+            throw Boom.notFound('Account plan not found')
 
         payload.type = Reflect.ownKeys(TransactionType).find(key => TransactionType[key].code == account_plan.type_code)
         

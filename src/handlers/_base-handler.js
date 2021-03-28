@@ -1,8 +1,8 @@
 require('dotenv').config()
 
 class BaseHandler {
-    constructor(name, service) {
-        this._name = name
+    constructor(params, service) {
+        this._params = params
         this._service = new service()
     }
 
@@ -11,13 +11,14 @@ class BaseHandler {
 
         return h
             .response()
-            .location(`http://${process.env.APPLICATION_HOST}:${process.env.APPLICATION_PORT}/${this._name}/${model.id}`)
+            .location(this._location('create', model))
             .code(201)
     }
 
     async find(req, h) {
         return h
             .response(await this._service.find(req.params.id, req.payload))
+            .location(this._location('find', req.params.id))
             .code(200)
     }
 
@@ -36,6 +37,10 @@ class BaseHandler {
         return h
             .response(await this._service.list())
             .code(200)
+    }
+
+    _location(route, value) {
+        return Reflect.has(this._params, route) ? `http://${process.env.APPLICATION_HOST}:${process.env.APPLICATION_PORT}/${this._params[route](value).join('/')}` : ''
     }
 }
 
