@@ -5,7 +5,7 @@ module.exports = {
     password: process.env.POSTGRES_PASSWD_DB,
     database: process.env.POSTGRES_DATABASE,
     host: process.env.POSTGRES_HOST,
-    dialect: "mysql",
+    dialect: "postgres",
     define:{
         timestamps: false,
         underscored: true,
