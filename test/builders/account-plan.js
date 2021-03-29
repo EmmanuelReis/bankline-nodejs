@@ -1,12 +1,13 @@
 const faker = require('faker')
 
 const AccountPlan = require('#model/account-plan')
-const { aUser } = require('#test/builder/user')
+const TransactionTypes = require('#model/transaction-type')
 
 class AccountPlanBuilder {
     name = faker.finance.currencyName()
-    type = 'RECEITA'
-    user = aUser().build()
+    type = { name: 'RECEITA' }
+    user_id = faker.datatype.uuid()
+    type_code = TransactionTypes['RECEITA'].code
 
     static aPlan = () => new this();
 
@@ -22,8 +23,8 @@ class AccountPlanBuilder {
         return this
     }
 
-    withoutUser() {
-        this.user = null
+    withoutUserId() {
+        this.user_id = null
         
         return this
     }

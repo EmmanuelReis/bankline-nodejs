@@ -1,15 +1,14 @@
-const { Sequelize, Op } = require('sequelize')
+const { Op } = require('sequelize')
 
-const dbConfig = require('./config/database.json')
+const { connectPostgres } = require('#database/conn')
+
+const conn = connectPostgres()
 
 const UserDB = require('#database/model/user')
 const AccountDB = require('#database/model/account')
 const AccountPlanDB = require('#database/model/account-plan')
-const TransactionDB = require('#database/model/transaction')
 
-const conn = new Sequelize(dbConfig.development)
-
-const modelsDB = [UserDB, AccountDB, AccountPlanDB, TransactionDB]
+const modelsDB = [UserDB, AccountDB, AccountPlanDB]
 
 modelsDB.forEach(modelDB => modelDB.init(conn))
 
@@ -22,7 +21,6 @@ module.exports = {
     UserDB,
     AccountDB,
     AccountPlanDB,
-    TransactionDB,
     conn,
     Op
 }

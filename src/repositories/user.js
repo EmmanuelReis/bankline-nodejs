@@ -1,6 +1,10 @@
+require('dotenv').config()
+
+const Boom = require('@hapi/boom')
+
 const Account = require('#model/account')
 const BaseRepository = require('#repository/_base-repository')
-const { UserDB, AccountDB, conn, Op } = require('#database')
+const { UserDB, AccountDB, conn, Op } = require('#database/postgres')
 
 class UserRepository extends BaseRepository {
     constructor() {
@@ -8,26 +12,36 @@ class UserRepository extends BaseRepository {
     }
 
     async create(model) {
-        const createUserAndAccount = await conn.transaction()
+        const transaction = await conn.transaction()
 
         try {
-            const user = await super.store(model, { transaction: createUserAndAccount })
+            const user = await UserDB.create(model, { transaction })
 
-            await AccountDB.create(new Account(user.id), { transaction: createUserAndAccount })
+            await AccountDB.create(new Account({ user_id: user.id }), { transaction })
 
-            await createUserAndAccount.commit()
+            await transaction.commit()
 
-            return user
+            return user.get()
         }
         catch(error) {
-            await createUserAndAccount.rollback()
+            await transaction.rollback()
             
-            throw new Error("Ops!")
+            throw Boom.internal()
         }
     }
 
     async findByCpfOrLogin(cpf, login) {
         return await UserDB.findOne({ where: { [Op.or]: { cpf, login } }})
+    }
+
+    async findUser(login, password) {
+        const users = await UserDB.findAll({ where: { [Op.or]: { login, cpf: login }, active: true }})
+        
+        return users.map(user => user.get()).find(user => user.password == password) 
+    }
+
+    async findAccount(user_id) {
+        return (await AccountDB.findOne({ where: { user_id } }))?.get()
     }
 }
 

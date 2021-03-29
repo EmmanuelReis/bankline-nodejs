@@ -1,3 +1,6 @@
+require('dotenv').config()
+
+const CryptoJS = require('crypto-js')
 const { DataTypes } = require("sequelize");
 
 const BaseColumns = require('#database/schema/_base')
@@ -22,8 +25,14 @@ module.exports = {
             unique: true
         },
         password: {
-            type: DataTypes.STRING(20),
-            allowNull: false
+            type: DataTypes.STRING(50),
+            allowNull: false,
+            set(value) {
+                this.dataValues.password = CryptoJS.AES.encrypt(value, process.env.SECRET_KEY).toString()
+            },
+            get() {
+                return CryptoJS.AES.decrypt(this.dataValues.password, process.env.SECRET_KEY).toString(CryptoJS.enc.Utf8)
+            }
         }
     }
 }
