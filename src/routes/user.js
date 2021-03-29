@@ -45,9 +45,6 @@ module.exports = [
             description: 'Create user',
             tags: ['api'],
             validate: {
-                headers: Joi.object({
-                    authorization: Joi.string().required()
-                }).unknown(),
                 payload: Joi.object({
                     name: Joi.string().max(50).required(),
                     login: Joi.string().max(20).required(),
@@ -123,14 +120,16 @@ module.exports = [
                 payload: Joi.object({
                     name: Joi.string().max(50).optional(),
                     login: Joi.string().max(20).optional(),
-                    password: Joi.string().max(20).optional()
+                    password: Joi.string().max(20).optional(),
+                    active: Joi.bool().optional()
                 })
             },
             response: {
                 schema: Joi.object({
                     name: Joi.string().max(50).optional(),
                     login: Joi.string().max(20).optional(),
-                    password: Joi.string().max(20).optional()
+                    password: Joi.string().max(20).optional(),
+                    active: Joi.bool().optional()
                 }).label('Result')
             }
         },

@@ -5,6 +5,7 @@ const AuthLib = require('hapi-auth-jwt2')
 const Inert = require('@hapi/inert');
 const Vision = require('@hapi/vision');
 const HapiSwagger = require('hapi-swagger');
+const Joi = require('joi')
 
 const routes = require('#routes')
 const { connectMongo } = require('#database/conn')
@@ -43,6 +44,25 @@ const server = Hapi.server({
 
     // server.auth.default('jwt');
 
+    server.route({
+        method: 'GET',
+        path: '/',
+        config: {
+            auth: false,
+            description: 'Home',
+            notes: 'Welcome',
+            tags: ['api'],
+            response: {
+                schema: Joi.object({
+                    message: "Welcome to Bankline! by: Cabras do agREST" 
+                }).label('Result')
+            }
+        },
+        handler: (req, h) => h
+                            .response({ message: "Welcome to Bankline! by: Cabras do agREST" })
+                            .location(`http://${process.env.APPLICATION_HOST}:${process.env.APPLICATION_PORT}/login`)
+                            .code(201)
+    })
     server.route(routes)
     
     await server.start()
