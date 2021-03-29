@@ -4,6 +4,7 @@ const User = require('#model/user')
 const UserRepository = require('#repository/user')
 const BaseService = require('#service/_base-service')
 const { toDTO } = require('#dto/user')
+const AccountDTO = require('#dto/account')
 
 class UserService extends BaseService {
     constructor() {
@@ -31,9 +32,7 @@ class UserService extends BaseService {
     }
 
     async account(id) {
-        const { active, user_id, updated_at, created_at, ...account } = await this._repository.findAccount(id) ?? {}
-        
-        return account 
+        return AccountDTO.toDTO(await this._repository.findAccount(id) ?? {}) 
     }
 }
 

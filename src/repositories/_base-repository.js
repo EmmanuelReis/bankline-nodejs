@@ -14,7 +14,7 @@ class BaseRepository {
     }
 
     async update(model_db, payload) {
-        const { id, cpf, type_code, active, update_at, balance, ...keys } = payload
+        const { id, cpf, type_code, update_at, balance, ...keys } = payload
 
         const attributes = Reflect.ownKeys(keys).filter(attribute => Reflect.has(model_db, attribute))
         

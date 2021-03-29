@@ -1,8 +1,15 @@
 const Joi = require('joi')
 
 const UserHandler = require('#handler/user')
+const AccountPlanHandler = require('#handler/account-plan')
+const UserSchema = require('#database/schema/user')
+const AccountSchema = require('#database/schema/account')
+const AccountPlanSchema = require('#database/schema/account-plan')
+
 const handler = new UserHandler()
-const path = '/users'
+const accountPlanHandler = new AccountPlanHandler()
+
+const path = `/${UserSchema.table_name}`
 
 module.exports = [
     {
@@ -34,6 +41,7 @@ module.exports = [
         method: 'POST',
         path,
         config: {
+            auth: false,
             description: 'Create user',
             tags: ['api'],
             validate: {
@@ -54,7 +62,6 @@ module.exports = [
         method: 'GET',
         path: `${path}/{id}`,
         config: {
-            auth: false,
             description: 'Get an user by id',
             notes: 'Return an user if it exists',
             tags: ['api'],
@@ -81,9 +88,8 @@ module.exports = [
     },
     {
         method: 'GET',
-        path: `${path}/{id}/account`,
+        path: `${path}/{id}/${AccountSchema.table_name}`,
         config: {
-            auth: false,
             description: 'Get user\'s account',
             tags: ['api'],
             validate: {
@@ -143,5 +149,43 @@ module.exports = [
             }
         },
         handler: handler.delete.bind(handler)
+    },
+    {
+        method: 'GET',
+        path: `${path}/{id}/${AccountPlanSchema.table_name}`,
+        config: {
+            description: 'User account plans',
+            tags: ['api'],
+            validate: {
+                headers: Joi.object({
+                    authorization: Joi.string().required()
+                }).unknown(),
+                params: Joi.object({
+                    id: Joi.string().guid().required()
+                })
+            }
+        },
+        handler: accountPlanHandler.find.bind(accountPlanHandler)
+    },
+    {
+        method: 'POST',
+        path: `${path}/{id}/${AccountPlanSchema.table_name}`,
+        config: {
+            description: 'Create account plan',
+            tags: ['api'],
+            validate: {
+                headers: Joi.object({
+                    authorization: Joi.string().required()
+                }).unknown(),
+                params: Joi.object({
+                    id: Joi.string().guid().required()
+                }),
+                payload: Joi.object({
+                    name: Joi.string().max(20).required(),
+                    type_id: Joi.string().guid().required()
+                })
+            }
+        },
+        handler: accountPlanHandler.create.bind(accountPlanHandler)
     }
 ]

@@ -3,7 +3,13 @@ const TransactionService = require('#service/transaction')
 
 class TransactionHandler extends BaseHandler {
     constructor() {
-        super('transactions', TransactionService)
+        super({}, TransactionService)
+    }
+
+    async create(req, h) {
+        req.payload.source_account_id = req.params.id
+
+        return await super.create(req, h)
     }
 }
 

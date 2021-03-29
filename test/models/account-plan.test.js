@@ -17,7 +17,7 @@ describe('Account plan tests', () => {
     })
 
     it('Should be return "false" when trying to create a plan without user', () => {
-        const plan = aPlan().withoutUser().build()
+        const plan = aPlan().withoutUserId().build()
 
         expect(plan.isValid()).to.be.false
     })
