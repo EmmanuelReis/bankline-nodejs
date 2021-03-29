@@ -1,14 +1,15 @@
-const BaseModel = require('#model/_base-model')
 const Type = require('#model/transaction-type')
 
-class Transaction extends BaseModel {
-    constructor({ id, value, type, source_account, target_account, created_at, updated_at, active }) {
-        super(id, created_at, updated_at, active)
+class Transaction {
+    constructor({ id, value, type, source_account_id, target_account_id, created_at }) {
+        const now = Date.now()
 
+        this.id = id
         this.value = value
         this.type = type
-        this.source_account = source_account
-        this.target_account = target_account
+        this.source_account_id = source_account_id
+        this.target_account_id = target_account_id
+        this.created_at = created_at || now
     }
 
     isValid() {
@@ -16,8 +17,8 @@ class Transaction extends BaseModel {
 
         return !(this.value <= 0
                 || !Type[transaction_type]
-                || !this.source_account
-                || Type[transaction_type].code == "T" && !this.target_account)
+                || !this.source_account_id
+                || Type[transaction_type].code == "T" && !this.target_account_id)
     }
 }
 

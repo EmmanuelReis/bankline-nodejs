@@ -56,13 +56,13 @@ describe('User tests', () => {
         await expect(service.delete(payload)).to.be.rejectedWith(Error)
     })
 
-    it('Should be returned a JSON with the fields "id, name, login, cpf" when trying to create a valid user', async () => {
+    it('Should be returned a JSON with the fields "id, name, created_at, updated_at, login, cpf" when trying to create a valid user', async () => {
         const user = new User(payload)
 
         sandbox.stub(UserRepository.prototype, 'findByCpfOrLogin').resolves(false)
         sandbox.stub(UserRepository.prototype, 'create').resolves(user)
         
-        const expected = ['id', 'name', 'login', 'cpf']
+        const expected = ['id', 'created_at', 'updated_at', 'name', 'login', 'cpf']
         const result = await service.create(payload)
 
         expect(Reflect.ownKeys(result)).to.deep.equals(expected)
