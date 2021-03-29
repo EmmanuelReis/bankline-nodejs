@@ -9,6 +9,7 @@ const Joi = require('joi')
 
 const routes = require('#routes')
 const { connectMongo } = require('#database/conn')
+const { validate } = require('#auth')
 
 const server = Hapi.server({
     host: process.env.APPLICATION_HOST,
@@ -31,18 +32,14 @@ const server = Hapi.server({
     await server.register([ Inert, Vision, { plugin: HapiSwagger, options: swaggerOptions }, AuthLib ]);
 
     server.auth.strategy('jwt', 'jwt', {
-        keys: process.env.SECRET_KEY,
-        validate: async (decode, req, h) => {
-            return {
-                isValid: true
-            }
-        },
+        key: process.env.SECRET_KEY,
+        validate,
         verifyOptions: { 
             algorithms: ['HS256']
         }
     });
 
-    // server.auth.default('jwt');
+    server.auth.default('jwt');
 
     server.route({
         method: 'GET',
@@ -61,7 +58,7 @@ const server = Hapi.server({
         handler: (req, h) => h
                             .response({ message: "Welcome to Bankline! by: Cabras do agREST" })
                             .location(`http://${process.env.APPLICATION_HOST}:${process.env.APPLICATION_PORT}/login`)
-                            .code(201)
+                            .code(200)
     })
     server.route(routes)
     

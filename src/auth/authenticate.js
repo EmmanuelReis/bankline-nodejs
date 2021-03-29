@@ -12,7 +12,8 @@ const generateToken = (user) => {
         name: user.name,
         cpf: user.cpf
     }, process.env.SECRET_KEY, { 
-        algorithm: 'HS256'
+        algorithm: 'HS256',
+        expiresIn: 30 * 60
     })
 
     return token
@@ -29,8 +30,18 @@ const authenticate = async (req, h) => {
         .header("Authorization", token)
         .code(200)
 }
+
+const validate = async (decode, req, h) => {
+    const { sub, name, cpf } = decode
+    const user = await service.find(sub)
+
+    return {
+        isValid: user && user.name == name && user.cpf == cpf 
+    }
+}
     
 module.exports = {
     authenticate,
-    generateToken
+    generateToken,
+    validate
 }
