@@ -10,5 +10,11 @@ module.exports = {
         timestamps: false,
         underscored: true,
         freezeTableName: true 
+    },
+    dialectOptions: {
+        ssl: { 
+            require: true,
+            rejectUnauthorized: false 
+        }
     }
 }
